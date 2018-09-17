@@ -981,3 +981,10 @@ config ICNSS_QMI
 	  over QMI channel.
 
 source "drivers/soc/qcom/wcnss/Kconfig"
+
+config STATE_NOTIFIER
+	bool "State Notifier"
+	default n
+	help
+	  A unified display state notifier for kernel drivers for easy porting
+	  between different devices.
