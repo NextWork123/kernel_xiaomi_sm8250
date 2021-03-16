@@ -293,6 +293,10 @@
 	mi,mdss-panel-delay-before-fod-hbm-off;
 	mi,mdss-panel-delay-after-fod-hbm-off;
 
+<<<<<<< HEAD
+=======
+	mi,mdss-dsi-dimlayer-brightness-alpha-lut-item-count = <21>;
+>>>>>>> e52177df91293... ARM64: dts: use Xiaomi's predefined lut table for dimlayer
 	qcom,disp-fod-dim-lut =
 	/* brightness  alpha */
 		<0          0xFF
