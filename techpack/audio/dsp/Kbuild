@@ -290,9 +290,7 @@ ifeq ($(KERNEL_BUILD), 0)
 KBUILD_EXTRA_SYMBOLS +=$(OUT)/obj/vendor/qcom/opensource/audio-kernel/ipc/Module.symvers
 endif
 
-ifdef CONFIG_BOARD_XIAOMI_SM8250
-	CDEFINES += -DAUDIO_SM8250_FLAG
-endif
+CDEFINES += -DAUDIO_SM8250_FLAG
 
 ifdef CONFIG_BOARD_ENUMA
     CDEFINES += -DCONFIG_TARGET_PRODUCT_ENUMA
