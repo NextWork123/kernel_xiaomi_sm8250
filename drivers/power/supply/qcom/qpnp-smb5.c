@@ -234,6 +234,9 @@ struct smb5 {
 static struct smb_charger *__smbchg;
 
 static int __debug_mask = 0;
+module_param_named(
+	debug_mask, __debug_mask, int, 0600
+);
 
 static BLOCKING_NOTIFIER_HEAD(pen_charge_state_notifier_list);
 
