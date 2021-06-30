@@ -10,7 +10,7 @@
 #include <linux/input.h>
 #include <linux/kthread.h>
 #include <linux/moduleparam.h>
-#include <linux/state_notifier.h>
+#include <drm/drm_notifier_mi.h>
 #include <linux/slab.h>
 #include <linux/version.h>
 #include <drm/drm_panel.h>
@@ -288,16 +288,18 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 
 	return NOTIFY_OK;
 }
-static int state_notifier_cb(struct notifier_block *nb,
-                               unsigned long action,void *data)
+static int msm_drm_notifier_cb(struct notifier_block *nb, unsigned long action,
+			  void *data)
 {
-	struct boost_drv *b = container_of(nb, typeof(*b), state_notif);
-	int *blank = ((struct state_event *)data)->data;
+	struct boost_drv *b = container_of(nb, typeof(*b), msm_drm_notif);
+	struct mi_drm_notifier *evdata = data;
+	int *blank = evdata->data;
+
 	/* Boost when the screen turns on and unboost when it turns off */
-	if (*blank == STATE_NOTIFIER_BOOST) {
+	if (*blank ==  MI_DRM_BLANK_UNBLANK) {
 		clear_bit(SCREEN_OFF, &b->state);
 		__cpu_input_boost_kick_max(b, wake_boost_duration);
-	} else if (*blank == STATE_NOTIFIER_SUSPEND) {
+	} else if {
 		set_bit(SCREEN_OFF, &b->state);
 		wake_up(&b->boost_waitq);
 	}
@@ -410,9 +412,9 @@ static int __init cpu_input_boost_init(void)
 		goto unregister_cpu_notif;
 	}
 
-	b->state_notif.notifier_call = state_notifier_cb;
-	b->state_notif.priority = INT_MAX;
-	ret = state_register_client(&b->state_notif);
+	b->msm_drm_notif.notifier_call = msm_drm_notifier_cb;
+	b->msm_drm_notif.priority = INT_MAX;
+	ret = mi_drm_register_client(&b->msm_drm_notif);
 	if (ret) {
 		pr_err("Failed to register state notifier, err: %d\n", ret);
 		goto unregister_handler;
@@ -427,8 +429,8 @@ static int __init cpu_input_boost_init(void)
 
 	return 0;
 
-unregister_state_notif:
-	state_unregister_client(&b->state_notif);
+unregister_fb_notif:
+	mi_drm_unregister_client(&b->msm_drm_notif);
 unregister_handler:
 	input_unregister_handler(&cpu_input_boost_input_handler);
 unregister_cpu_notif:
