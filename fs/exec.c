@@ -83,6 +83,7 @@ static DEFINE_RWLOCK(binfmt_lock);
 
 #define SURFACEFLINGER_BIN_PREFIX "/system/bin/surfaceflinger"
 #define HWCOMPOSER_BIN_PREFIX "/vendor/bin/hw/vendor.qti.hardware.display.composer-service"
+#define SURFACEFLINGER_BIN_PREFIX "/system/bin/surfaceflinger"
 #define ZYGOTE32_BIN "/system/bin/app_process32"
 #define ZYGOTE64_BIN "/system/bin/app_process64"
 static struct task_struct *zygote32_task;
