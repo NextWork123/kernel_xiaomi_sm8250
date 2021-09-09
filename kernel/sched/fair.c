@@ -5606,7 +5606,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 		 * overutilized. Hopefully the cpu util will be back to
 		 * normal before next overutilized check.
 		 */
-		if (!task_new (flags & ENQUEUE_WAKEUP)) &&
+		if ((flags & ENQUEUE_WAKEUP) &&
 		    !(prefer_idle && rq->nr_running == 1))
 			update_overutilized_status(rq);
 	}
