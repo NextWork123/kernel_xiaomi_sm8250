@@ -988,7 +988,7 @@ static int fts_irq_registration(struct fts_ts_data *ts_data)
 		FTS_ERROR("IRQs are inconsistent, please check <interrupts> & <focaltech,irq-gpio> in DTS");
 
 	if (0 == pdata->irq_gpio_flags)
-		pdata->irq_gpio_flags = IRQF_TRIGGER_FALLING | IRQF_PRIME_AFFINE | IRQF_ONESHOT | IRQF_PERF_CRITICAL;
+		pdata->irq_gpio_flags = IRQF_TRIGGER_FALLING | IRQF_PRIME_AFFINE | IRQF_ONESHOT;
 	FTS_INFO("irq flag:%x", pdata->irq_gpio_flags);
 	ret =
 		request_threaded_irq(ts_data->irq, NULL, fts_ts_interrupt, pdata->irq_gpio_flags | IRQF_ONESHOT,
