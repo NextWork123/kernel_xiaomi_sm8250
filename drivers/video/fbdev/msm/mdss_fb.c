@@ -38,7 +38,6 @@
 #include <linux/file.h>
 #include <linux/kthread.h>
 #include <linux/sched.h>
-#include <linux/devfreq_boost.h>
 #include <uapi/linux/sched/types.h>
 #include "mdss_fb.h"
 #include "mdss_mdp_splash_logo.h"
@@ -3328,9 +3327,6 @@ static int __ioctl_transition_dyn_mode_state(struct msm_fb_data_type *mfd,
 	mutex_lock(&mfd->switch_lock);
 	switch (cmd) {
 	case MSMFB_ATOMIC_COMMIT:
-		cpu_input_boost_kick();
-		devfreq_boost_kick(DEVFREQ_MSM_LLCCBW_DDR);
-		devfreq_boost_kick(DEVFREQ_MSM_LLCCBW);
 		if ((mfd->switch_state == MDSS_MDP_WAIT_FOR_VALIDATE)
 				&& validate) {
 			if (mfd->switch_new_mode != SWITCH_RESOLUTION)
