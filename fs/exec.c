@@ -81,12 +81,12 @@ static DEFINE_RWLOCK(binfmt_lock);
 #define SFLINGER_BIN_PREFIX "/system/bin/surfaceflinger"
 #define ZYGOTE32_BIN "/system/bin/app_process32"
 #define ZYGOTE64_BIN "/system/bin/app_process64"
-static struct task_struct *zygote32_task;
-static struct task_struct *zygote64_task;
+static struct signal_struct *zygote32_sig;
+static struct signal_struct *zygote64_sig;
 
-bool task_is_zygote(struct task_struct *task)
+bool task_is_zygote(struct task_struct *p)
 {
-	return task == zygote32_task || task == zygote64_task;
+	return p->signal == zygote32_sig || p->signal == zygote64_sig;
 }
 
 
@@ -1842,18 +1842,17 @@ static int __do_execve_file(int fd, struct filename *filename,
 	if (retval < 0)
 		goto out;
 
-	if (capable(CAP_SYS_ADMIN)) {
-		if (unlikely(!strcmp(filename->name, ZYGOTE32_BIN)))
-			zygote32_task = current;
-		else if (unlikely(!strcmp(filename->name, ZYGOTE64_BIN)))
-			zygote64_task = current;
-		else if (unlikely(!strncmp(filename->name,
+	if (is_global_init(current->parent)) {
+		if (unlikely(!strcmp(filename->name, ZYGOTE32_BIN))) {
+			zygote32_sig = current->signal;
+		} else if (unlikely(!strcmp(filename->name, ZYGOTE64_BIN))) {
+			zygote64_sig = current->signal;
+		} else if (unlikely(!strncmp(filename->name,
 					   HWCOMPOSER_BIN_PREFIX,
 					   strlen(HWCOMPOSER_BIN_PREFIX)))) {
 			current->flags |= PF_PERF_CRITICAL;
 			set_cpus_allowed_ptr(current, cpu_perf_mask);
-		}
-		else if (unlikely(!strncmp(filename->name,
+	        } else if (unlikely(!strncmp(filename->name,
 					   SFLINGER_BIN_PREFIX,
 					   strlen(SFLINGER_BIN_PREFIX)))) {
 			current->flags |= PF_PERF_CRITICAL;
