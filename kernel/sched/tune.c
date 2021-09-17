@@ -598,7 +598,7 @@ int schedtune_task_boost(struct task_struct *p)
 	/* Get task boost value */
 	rcu_read_lock();
 	st = task_schedtune(p);
-	task_boost = max(st->boost, schedtune_adj_ta(p));
+	task_boost = (st->boost > 0 && schedtune_adj_ta(p));
 	rcu_read_unlock();
 
 	return task_boost;
@@ -616,7 +616,7 @@ int schedtune_prefer_idle(struct task_struct *p)
 	/* Get prefer_idle value */
 	rcu_read_lock();
 	st = task_schedtune(p);
-	task_boost = max(st->boost, schedtune_adj_ta(p));
+	task_boost = (st->boost > 0 && schedtune_adj_ta(p));
 	prefer_idle = st->prefer_idle;
 	rcu_read_unlock();
 
@@ -634,7 +634,7 @@ bool schedtune_prefer_high_cap(struct task_struct *p)
 	/* Get prefer_high_cap value */
 	rcu_read_lock();
 	st = task_schedtune(p);
-	prefer_high_cap = st->prefer_high_cap;
+	prefer_high_cap = (st->prefer_high_cap && schedtune_adj_ta(p));
 	rcu_read_unlock();
 
 	return prefer_high_cap;
