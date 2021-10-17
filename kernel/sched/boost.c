@@ -8,7 +8,6 @@
 #include <linux/of.h>
 #include <linux/sched/core_ctl.h>
 #include <trace/events/sched.h>
-#include <linux/binfmts.h>
 
 /*
  * Scheduler boost is a mechanism to temporarily place tasks on CPUs
@@ -47,10 +46,18 @@ static void set_boost_policy(int type)
 		return;
 	}
 
-	if (min_possible_efficiency != max_possible_efficiency) {
+#ifdef CONFIG_ARCH_KONA
+	if (CONFIG_ARCH_KONA) {
 		boost_policy = SCHED_BOOST_ON_BIG;
 		return;
 	}
+#endif
+#ifdef CONFIG_ARCH_LITO
+        if (CONFIG_ARCH_LITO) {
+                boost_policy = SCHED_BOOST_ON_BIG;
+                return;
+        }
+#endif
 
 	boost_policy = SCHED_BOOST_ON_ALL;
 }
@@ -67,13 +74,13 @@ static void sched_no_boost_nop(void)
 static void sched_full_throttle_boost_enter(void)
 {
 	core_ctl_set_boost(true);
-	walt_enable_frequency_aggregation(true);
+	//walt_enable_frequency_aggregation(true);
 }
 
 static void sched_full_throttle_boost_exit(void)
 {
 	core_ctl_set_boost(false);
-	walt_enable_frequency_aggregation(false);
+	//walt_enable_frequency_aggregation(false);
 }
 
 static void sched_conservative_boost_enter(void)
@@ -88,12 +95,12 @@ static void sched_conservative_boost_exit(void)
 
 static void sched_restrained_boost_enter(void)
 {
-	walt_enable_frequency_aggregation(true);
+	//walt_enable_frequency_aggregation(true);
 }
 
 static void sched_restrained_boost_exit(void)
 {
-	walt_enable_frequency_aggregation(false);
+	//walt_enable_frequency_aggregation(false);
 }
 
 struct sched_boost_data {
@@ -249,6 +256,8 @@ int sched_set_boost(int type)
 {
 	int ret = 0;
 
+	return 0;
+
 	mutex_lock(&boost_mutex);
 	if (verify_boost_params(type))
 		_sched_set_boost(type);
@@ -264,9 +273,6 @@ int sched_boost_handler(struct ctl_table *table, int write,
 {
 	int ret;
 	unsigned int *data = (unsigned int *)table->data;
-	
-	if (task_is_booster(current))
-		return 0;
 
 	mutex_lock(&boost_mutex);
 
