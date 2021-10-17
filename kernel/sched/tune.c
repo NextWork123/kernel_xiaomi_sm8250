@@ -100,8 +100,6 @@ struct schedtune {
 	 */
 	bool sched_boost_enabled;
 
-#endif /* CONFIG_SCHED_WALT */
-
 	/* Hint to bias scheduling of tasks on that SchedTune CGroup
 	 * towards idle CPUs */
 	int prefer_idle;
@@ -140,7 +138,6 @@ root_schedtune = {
 	.boost	= 0,
 	.sched_boost_no_override = false,
 	.sched_boost_enabled = true,
-#endif
 	.prefer_idle = 0,
 	.prefer_high_cap = false,
 };
