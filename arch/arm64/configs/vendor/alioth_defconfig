@@ -1,11 +1,7 @@
-	#
-# Automatically generated file; DO NOT EDIT.
-# Linux/arm64 4.19.209 Kernel Configuration
+#
+# Linux/arm64 4.19.213 Kernel Configuration
 #
 
-#
-# Compiler: gcc (Ubuntu 10.3.0-1ubuntu1) 10.3.0
-#
 CONFIG_CC_IS_GCC=y
 CONFIG_GCC_VERSION=100300
 CONFIG_CLANG_VERSION=0
