@@ -1057,7 +1057,7 @@ kgsl_sharedmem_page_alloc_user(struct kgsl_memdesc *memdesc,
 	 */
 	if (align < ilog2(SZ_1M))
 		align = ilog2(SZ_1M);
-	page_size = kgsl_get_page_size(size, align, memdesc);
+	page_size = kgsl_get_page_size(size, align);
 
 	/*
 	 * The alignment cannot be less than the intended page size - it can be
@@ -1142,7 +1142,7 @@ kgsl_sharedmem_page_alloc_user(struct kgsl_memdesc *memdesc,
 		memdesc->page_count += page_count;
 
 		/* Get the needed page size for the next iteration */
-		page_size = kgsl_get_page_size(len, align, memdesc);
+		page_size = kgsl_get_page_size(len, align);
 	}
 
 	/* Call to the hypervisor to lock any secure buffer allocations */

@@ -341,7 +341,7 @@ done:
 
 eagain:
 	*page_size = kgsl_get_page_size(size,
-			ilog2(size), memdesc);
+			ilog2(size));
 	*align = ilog2(*page_size);
 	return -EAGAIN;
 }
