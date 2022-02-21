@@ -2688,6 +2688,10 @@ static inline int ufshpb_version_check(struct ufshpb_dev_info *hpb_dev_info)
 
 	INIT_INFO("HPB Driver Version : %.4X", UFSHPB_DD_VER);
 
+	if (hpb_dev_info->hpb_ver != UFSHPB_VER) {
+		ERR_MSG("ERROR: HPB Spec Version mismatch. So HPB disabled.");
+		return -ENODEV;
+	}
 	return 0;
 }
 
