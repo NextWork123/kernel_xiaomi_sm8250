@@ -6434,3 +6434,6 @@ CONFIG_BOEFFLA_WL_BLOCKER=y
 # CONFIG_DEBUG_INFO is not set
 # CONFIG_SCHEDSTATS is not set
 # CONFIG_DEBUG_LIST is not set
+
+# Disable stability debug configs
+# CONFIG_EDAC_KRYO_ARM64_PANIC_ON_UE is not set
